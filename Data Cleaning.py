@@ -1,9 +1,14 @@
-import json, ast, requests, os
+import json
+import ast
+import requests
+import os
+import time
+import logging
 import pandas as pd
 from pandas import json_normalize
 
 # Read the json containing the names of every NHL team to exist
-teams_df = pd.read_json('/Users/PeterDePaul/Downloads/2024-NHL-Rookie-of-the-Year/teams.json')
+teams_df = pd.read_json('/Users/PeterDePaul/Downloads/2024-NHL-Rookie-of-the-Year/Rosters/teams.json')
 # Extract the important data from the json
 teams_df = json_normalize(teams_df['data'])
 # Sort the team information by their 'id' 
@@ -28,7 +33,7 @@ for team_code in team_codes:
 # Store the path to the folder directory
 folder_path = '/Users/PeterDePaul/Downloads/2024-NHL-Rookie-of-the-Year/Rosters'
 # Extract the names of all files existing in the folder
-file_names = os.listdir(folder_path)
+file_names = [file for file in os.listdir(folder_path) if file not in ['teams.json', 'current_teams.json']]
 # Initialize an empty list for each of the NHL position groups: Forwards, Defensemen, and Goalies
 forwards_list = []
 defensemen_list = []
@@ -54,22 +59,70 @@ forwards_df = pd.concat(forwards_list)
 defensemen_df = pd.concat(defensemen_list)
 goalies_df = pd.concat(goalies_list)
 
+
 start_year = [str(year) for year in range(2003, 2024)]
 end_year = [str(year) for year in range(2004, 2025)]
 seasons = [str(start) + str(finish) for start, finish in zip(start_year, end_year)]
+seasons = [season for season in seasons if season != '20042005']
+
+##### *******DO NOT RE-RUN (ABOUT 3500 json FILES)*****
+logging.basicConfig(level=logging.INFO)
+# Get the game logs for all forwards for each possible season
+for season in seasons:
+    for forwards_id in forwards_df['id']:
+        try: 
+            url = f"https://api-web.nhle.com/v1/player/{forwards_id}/game-log/{season}/2"
+            response = requests.get(url)
+            response.raise_for_status()
+            data = response.json()
+        
+            with open(f"skater_{forwards_id}_stats_{season}.json", 'w') as file:
+                json.dump(data, file)
+            
+            logging.info(f"Successful for {forwards_id} for {season}")
+        except Exception as e: 
+            logging.error(f"Error for {forwards_id} for {season}")
+          
+test_id = defensemen_df['id']        
+url = f"https://api-web.nhle.com/v1/player/8480196/game-log/20082009/2"
+response = requests.get(url)
+int(response.headers['Content-Length'])
+response.raise_for_status()
+data = response.json()         
+          
+            
+for season in seasons:
+    for defensemen_id in defensemen_df['id']:
+        try: 
+            url = f"https://api-web.nhle.com/v1/player/{defensemen_id}/game-log/{season}/2"
+            response = requests.get(url)
+            response.raise_for_status()
+            response_length = int(response.headers['Content-Length'])
+            if response_length >= 75:
+                data = response.json()
+                with open(f"defensemen_{defensemen_id}_stats_{season}.json", 'w') as file:
+                    json.dump(data, file)
+                
+                logging.info(f"Successful for {defensemen_id} for {season}")
+            else:
+                logging.warning(f"File too small for {defensemen_id} for {season}")
+        except Exception as e: 
+            logging.error(f"Error for {defensemen_id} for {season}")
 
 for season in seasons:
-    skaters_url = f"https://api.nhle.com/stats/rest/en/skater/summary?limit=-1&sort=points&cayenneExp=seasonId={season}"
+    skaters_url = f"https://api-web.nhle.com/v1/skater-stats-leaders/{season}/2?limit=-1"
     skaters_response = requests.get(skaters_url)
+    skaters_data = skaters_response.json()
 
     with open(f"skaters_stats_{season}.json", 'w') as skaters_file:
-        json.dump(skaters_response.json(), skaters_file)
+        json.dump(skaters_data, skaters_file)
 
-    goalies_url = f"https://api.nhle.com/stats/rest/en/goalie/summary?limit=-1&sort=wins&cayenneExp=seasonId={season}"
+    goalies_url = f"https://api-web.nhle.com/v1/goalie-stats-leaders/{season}/2?limit=-1"
     goalies_response = requests.get(goalies_url)
+    goalies_data = goalies_response.json()
 
     with open(f"goalies_stats_{season}.json", 'w') as goalies_file:
-        json.dump(goalies_response.json(), goalies_file)
+        json.dump(goalies_data, goalies_file)
 
 # Store the path to the folder directory
 skaters_path = '/Users/PeterDePaul/Downloads/2024-NHL-Rookie-of-the-Year/STATS/Skaters/json Files'
@@ -77,6 +130,60 @@ skaters_path = '/Users/PeterDePaul/Downloads/2024-NHL-Rookie-of-the-Year/STATS/S
 file_names = [file for file in os.listdir(skaters_path) if file != '.DS_Store']
 # Initialize an empty list for the skaters (Forwards & Defensmen)
 skaters_list =[]
+
+
+logging.basicConfig(level=logging.INFO)
+forwards_stats = []
+# Load the json files for each forwards game logs for each season played
+for season in seasons:
+    for forwards_id in forwards_df['id']:
+        try:
+            with open(f"/Users/PeterDePaul/Downloads/2024-NHL-Rookie-of-the-Year/skater_{forwards_id}_stats_{season}.json") as file:
+                data = json.load(file)
+                data_df = pd.DataFrame(data['gameLog']) # create the DataFrame
+                data_df['seasonId'] = season # add a seasonId variable
+                data_df['playerId'] = forwards_id # add a playerId variable
+                forwards_stats.append(data_df) # Append these DataFrames to the list
+            # If it works print statement
+            logging.info(f"Successful for {forwards_id} for {season}")
+        except Exception as e: 
+            # If it doesn't work print this error
+            logging.error(f"Error for {forwards_id} for {season}")
+# Combine the list into a large DataFrame
+forwards_stats_df = pd.concat(forwards_stats)
+# forwards_stats_df.to_csv('forwards_game_logs.csv')
+
+test_path = '/Users/PeterDePaul/Downloads/2024-NHL-Rookie-of-the-Year/defensemen_8474013_stats_20122013.json'
+with open(test_path) as file:
+    data = json.load(file)
+
+
+logging.basicConfig(level=logging.INFO)
+defensemen_stats = []
+# Load the json files for each defensemen game logs for each season played
+for season in seasons:
+    for defensemen_id in defensemen_df['id']:
+        try:
+            with open(f"/Users/PeterDePaul/Downloads/2024-NHL-Rookie-of-the-Year/defensemen_{defensemen_id}_stats_{season}.json") as file:
+                data = json.load(file)
+                data_df = pd.DataFrame(data['gameLog']) # create the DataFrame
+                data_df['seasonId'] = season # add a seasonId variable
+                data_df['playerId'] = defensemen_id # add a playerId variable
+                defensemen_stats.append(data_df) # Append these DataFrames to the list
+            # If it works print statement
+            logging.info(f"Successful for {defensemen_id} for {season}")
+        except Exception as e: 
+            # If it doesn't work print this error
+            logging.error(f"Error for {defensemen_id} for {season}")
+# Combine the list into a large DataFrame
+defensemen_stats_df = pd.concat(defensemen_stats)
+# defensemen_stats_df.to_csv('defensemen_game_logs.csv')
+
+with open(test_path, 'r') as file:
+    test_data = json.load(file)
+
+test_data.keys()
+test_data['goalsSh']
 
 for file_name in file_names:
     file_path = os.path.join(skaters_path, file_name)
