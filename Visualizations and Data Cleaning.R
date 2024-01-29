@@ -16,16 +16,13 @@ for_info <-
          lastName = str_extract(lastName, "[[:alpha:]]+")) %>% 
   # Create a Name variable which contains the full name "firstName lastName" 
   # of a player
-  mutate(Name = str_c(firstName, lastName, sep = " "), .before = firstName) %>% 
-  select(-firstName, -lastName)
+  mutate(Name = str_c(firstName, lastName, sep = " "), .before = firstName) %>%
+  mutate(playerId = as.factor(id), .before = id) %>% 
+  select(-firstName, -lastName, -id)
 
 bedard_info <-
   for_info %>% 
   filter(Name == "Connor Bedard")
-
-bedard_stats <-
-  rookie_stats %>% 
-  filter(playerId == bedard_info$id)
 
 # Load in the forwards game_log
 for_game_log <- 
@@ -64,7 +61,17 @@ rookie_stats <-
          gpg = goals / games,
          apg = assists / games,
          spg = shots / games) %>% 
-  arrange(desc(points))
+  arrange(desc(points)) %>% 
+  inner_join(for_info %>% select(playerId, Name), by = "playerId") %>% 
+  relocate(Name, .after = playerId)
+
+# Rookie Stats for the 2023-2024 season
+rookie_stats %>% 
+  filter(seasonId == 20232024)
+
+bedard_stats <-
+  rookie_stats %>% 
+  filter(playerId == bedard_info$id)
 
 # Points per Game Scatterplot
 ppg_plot <-
