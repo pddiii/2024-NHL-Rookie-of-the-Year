@@ -242,3 +242,38 @@ for file_name in file_names:
 # Create one large data frame for goalies
 goalies_df = pd.concat(goalies_list)
 goalies_list
+
+# URL to look at season information
+season_end_url = "https://api-web.nhle.com/v1/standings-season"
+season_end_request = requests.get(season_end_url)
+season_end_dates = season_end_request.json()
+
+# Get the end dates for each season in the season_end_dates object
+season_end = [season.get('standingsEnd') for season in season_end_dates['seasons']]
+# Extract only the dates of interest which begins with '2006-04-18' for our data
+season_end = season_end[-19:]
+
+# Initialize an empty list for the standings data
+standings_list = []
+
+# Loop through the end dates in season_end object
+for date in season_end:
+    try: 
+        # Query the NHL API to get standings by the end date of the season
+        url = f"https://api-web.nhle.com/v1/standings/{date}"
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json()
+        # Create a DataFrame object containing the standings on that date
+        df = pd.DataFrame(data['standings'])
+        # Append the DataFrame to the list
+        standings_list.append(df)
+    
+        logging.info(f"Successful for {date}")
+    except Exception as e: 
+        logging.error(f"Error for {date}")
+
+# Create one large DataFrame object containing the standing year by year
+standings_df = pd.concat(standings_list)
+# Export the standings data to a csv file
+# standings_df.to_csv('standings.csv', index=False)
