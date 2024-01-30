@@ -1,5 +1,6 @@
 library(tidyverse)
 library(ggplot2)
+library(hockeyR)
 
 # Load in the forward info
 for_info <- 
@@ -72,6 +73,14 @@ rookie_stats %>%
 bedard_stats <-
   rookie_stats %>% 
   filter(playerId == bedard_info$id)
+
+# Get the NHL game results data from 2005-2006 to 2023-2024
+seasons <- 2006:2024
+game_ids <- list()
+for (i in 1:length(seasons)) {
+    game_ids[[i]] <- get_game_ids(season = seasons[i])
+}
+
 
 # Points per Game Scatterplot
 ppg_plot <-
