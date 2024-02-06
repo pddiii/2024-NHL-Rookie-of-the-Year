@@ -1,0 +1,25 @@
+---
+title: "Connor Bedard is Rookie of the Year"
+author: "Peter DePaul III"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("Visualizations and Data Cleaning.R")
+```
+
+## A Little Back Story on Connor Bedard
+
+Connor Bedard is a unique talent in the sport of ice hockey. Bedard has been receiving mass media attention since he was only 14 years old. It was in March 2020 when Bedard was approved to join the major-junior level of hockey in Canada, a year earlier than his peers. It was known right away that something set him apart from his peers. For this reason, Bedard was drafted 1st overall by the Regina Pats in the Western Hockey League (WHL) draft later in 2020.
+
+Bedard has a one of a kind WHL career, and junior level career. There is no other way to describe it. Let's discuss some of his accomplishments at this level, and yes these numbers are correct. In 3 season with the Regina Pats, Bedard amassed 134 goals, 137 assists for 271 career points in 134 games played. This includes a historic 2022-2023 season where he scored 71 goals and had 72 assists in only 57 games, that's 2.5 points per game (ppg). This is the greatest modern season in the WHL, and it was the first season since 1995-96 where a player had 140 points. In the past 25 years of hockey there have been a lot of great players at the junior levels, in fact a lot of them are great players at the NHL level too. Perhaps the two greatest junior seasons aside from Bedard are those of Connor McDavid and Sidney Crosby. McDavid had 44 goals and 76 assists for 120 points in 47 games (2.55 ppg) in the OHL, and Crosby had 66 goals and 102 assists for 168 points in 62 games (2.71 ppg) in the QMJHL. The thing that makes these 3 performances incredible is all of them were only 17 years old.
+
+In addition to his incredible performance in the WHL, Bedard dominated in the IIHF World Junior Championships. In World Juniors, he has the 4th most career points with 36 points in 16 games played (2.25 ppg) and he won gold medals with Canada in both the 2022 and 2023 tournaments. His 2023 performance was historic as he racked up 9 goals and 14 assists for 23 points in 7 games (3.286 ppg) which is the 4th best single tournament performance in history. He is both the career points leader, and season high points leader for skaters from the past 25 years. The only IIHF tournament that is more impressive than Bedard's 2023 is Peter Forsberg's 31 points in 7 games during the 1993 World Junior Championships. Not to say this wasn't incredible but Forsberg did score 10 points in a 20-1 blowout of a Japan team that probably should not have been in the tournament. Don't believe me about Japan? The 1993 Japanese team was 0-7 with 9 goals scored, and 83 goals against for an average of losing by 10 goals per game. Now back to Bedard and his NHL journey.
+
+## Bedard the Blackhawk
+
+Due to his incredible WHL and World Juniors career, Bedard rightfully was selected by the Chicago Blackhawks with the 1st pick in the 2023 NHL Draft. Bedard is respected throughout the league and immediately took his place centering the 1st line of the Blackhawks. This is an impressive feat only awarded to players of Bedard, Crosby, or McDavid caliber. Bedard has been playing well during his Rookie season with 15 goals and 18 assists for 33 points in 39 games played. The unfortunate part of his Rookie Season is that he has not played since January 5th, 2024 when he sustained a broken jaw on a hit from New Jersey Devils defenseman Brendan Smith. He is projected to miss 6-8 weeks because of this injury. His play through the first half of the season has not gone unrecognized by the league as he was voted as an All Star in his rookie season. Additionally, he is the youngest NHL All Star of all time.
+
+Now the thing which is most abysmal about Bedard is the team he plays for. The 2023-2024 Chicago Blackhawks are terrible. They're not okay, they're not bad, they're one of the worst teams in NHL history. Currently speaking the Chicago Blackhawks have the 2nd worst goal differential of any team in the NHL with a goal differntial of -74 goals. They're on pace to have one of the worst seasons in recent history, but luckily their overshadowed by the "NHL Franchise" San Jose Sharks who are hard to call a team with the way they have played. Funny enough the Sharks do have more points in the standings this year with 33 points, meanwhile the Blackhawks are sitting in dead last with 30 points. The reason I mention this about the Blackhawks is because I find it very important for understanding and explaining Bedard's performance so far through his Rookie Season. 
