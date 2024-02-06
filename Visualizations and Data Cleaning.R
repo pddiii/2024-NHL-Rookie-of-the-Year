@@ -137,6 +137,8 @@ rookie_stats <-
 # Projected point total for Chicago Blackhawks as of 01/30/2024
 rookie_stats[77, "team_points"] <- 49
 
+# write_csv(rookie_stats, "rookie_stats.csv")
+
 # Subset the rookie stats to those who have played at least 35 games
 # Bedard has played 39 games
 rookie_subset <-
@@ -148,6 +150,12 @@ rookie_subset <-
   ungroup() %>% 
   arrange(desc(std_ppg))
 
+# write_csv(rookie_subset, "rookie_subset_stats.csv")
+
+bedard_stats <- 
+  rookie_subset %>% 
+  filter(Name == "Connor Bedard")
+
 # Points per Game Scatterplot
 ppg_plot <-
   ggplot(rookie_stats %>% filter(games >= 35, ppg >= bedard_stats$ppg), 
@@ -156,7 +164,8 @@ ppg_plot <-
   labs(title = "Scatterplot of PPG vs Team Points",
        x = "Team Standing points", y = "Points per Game (PPG)")
 
-ppg_plot +
+ppg_plot_w_names <- 
+  ppg_plot +
   geom_point(data = subset(rookie_stats, Name == "Connor Bedard"),
              aes(color = "Connor Bedard")) +
   geom_point(data = subset(rookie_stats, Name == "Alex Ovechkin"),
@@ -182,7 +191,8 @@ gpg_plot <-
   labs(title = "Scatterplot of GPG vs Team Points",
        x = "Team Standing Points", y = "Goals per Game (GPG)")
 
-gpg_plot +
+gpg_plot_w_names <- 
+  gpg_plot +
   geom_point(data = subset(rookie_stats, Name == "Connor Bedard"),
              aes(color = "Connor Bedard")) +
   geom_point(data = subset(rookie_stats, Name == "Alex Ovechkin"),
@@ -208,7 +218,8 @@ apg_plot <-
   labs(title = "Scatterplot of APG vs Team Points",
        x = "Team Standing Points", y = "Assists per Game (APG)")
 
-apg_plot +
+apg_plot_w_names <- 
+  apg_plot +
   geom_point(data = subset(rookie_stats, Name == "Connor Bedard"),
              aes(color = "Connor Bedard")) +
   geom_point(data = subset(rookie_stats, Name == "Alex Ovechkin"),
@@ -234,7 +245,8 @@ pm_plot <-
   labs(title = "Scatterplot of PlusMinus vs Team Points",
        x = "Team Standing Points", y = "PlusMinus")
 
-pm_plot +
+pm_plot_w_names <- 
+  pm_plot +
   geom_point(data = subset(rookie_stats, Name == "Connor Bedard"),
              aes(color = "Connor Bedard")) +
   geom_point(data = subset(rookie_stats, Name == "Alex Ovechkin"),
@@ -260,7 +272,8 @@ toi_plot <-
   labs(title = "Scatterplot of PlusMinus vs Time on Ice",
        x = "Time on Ice (toi)", y = "PlusMinus")
 
-toi_plot +
+toi_plot_w_names <- 
+  toi_plot +
   geom_point(data = subset(rookie_stats, Name == "Connor Bedard"),
              aes(color = "Connor Bedard")) +
   geom_point(data = subset(rookie_stats, Name == "Alex Ovechkin"),
