@@ -1,13 +1,20 @@
 ---
-title: "Connor Bedard is Rookie of the Year"
+title: "Discussing the 2024 Calder Trophy"
 author: "Peter DePaul III"
 date: "`r Sys.Date()`"
-output: pdf_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
 source("Visualizations and Data Cleaning.R")
+library(tidyverse)
+library(kableExtra)
+library(patchwork)
 ```
 
 ## A Little Back Story on Connor Bedard
@@ -22,4 +29,97 @@ In addition to his incredible performance in the WHL, Bedard dominated in the II
 
 Due to his incredible WHL and World Juniors career, Bedard rightfully was selected by the Chicago Blackhawks with the 1st pick in the 2023 NHL Draft. Bedard is respected throughout the league and immediately took his place centering the 1st line of the Blackhawks. This is an impressive feat only awarded to players of Bedard, Crosby, or McDavid caliber. Bedard has been playing well during his Rookie season with 15 goals and 18 assists for 33 points in 39 games played. The unfortunate part of his Rookie Season is that he has not played since January 5th, 2024 when he sustained a broken jaw on a hit from New Jersey Devils defenseman Brendan Smith. He is projected to miss 6-8 weeks because of this injury. His play through the first half of the season has not gone unrecognized by the league as he was voted as an All Star in his rookie season. Additionally, he is the youngest NHL All Star of all time.
 
-Now the thing which is most abysmal about Bedard is the team he plays for. The 2023-2024 Chicago Blackhawks are terrible. They're not okay, they're not bad, they're one of the worst teams in NHL history. Currently speaking the Chicago Blackhawks have the 2nd worst goal differential of any team in the NHL with a goal differntial of -74 goals. They're on pace to have one of the worst seasons in recent history, but luckily their overshadowed by the "NHL Franchise" San Jose Sharks who are hard to call a team with the way they have played. Funny enough the Sharks do have more points in the standings this year with 33 points, meanwhile the Blackhawks are sitting in dead last with 30 points. The reason I mention this about the Blackhawks is because I find it very important for understanding and explaining Bedard's performance so far through his Rookie Season. 
+Now the thing which is most abysmal about Bedard is the team he plays for. The 2023-2024 Chicago Blackhawks are terrible. They're not okay, they're not bad, they're one of the worst teams in NHL history. Currently speaking the Chicago Blackhawks have the 2nd worst goal differential of any team in the NHL with a goal differential of -74 goals. They're on pace to have one of the worst seasons in recent history, but luckily their overshadowed by the "NHL Franchise" San Jose Sharks who are hard to call a team with the way they have played. Funny enough the Sharks do have more points in the standings this year with 33 points, meanwhile the Blackhawks are sitting in dead last with 30 points. The reason I mention this about the Blackhawks is because it is very important for understanding and explaining Bedard's performance so far.
+
+## Calder Candidates
+
+It is Friday February 9th, 2024 as I'm writing this and here are the betting favorites to win the Calder Trophy (NHL's Rookie of the Year).
+
+
+```{r Odds Table, echo=FALSE}
+image_paths <- 
+  c("/Users/PeterDePaul/Downloads/2024-NHL-Rookie-of-the-Year/Player Info/connor_bedard.png", "/Users/PeterDePaul/Downloads/2024-NHL-Rookie-of-the-Year/Player Info/brock_faber.png", "/Users/PeterDePaul/Downloads/2024-NHL-Rookie-of-the-Year/Player Info/luke_hughes.png", "/Users/PeterDePaul/Downloads/2024-NHL-Rookie-of-the-Year/Player Info/marco_rossi.png", "/Users/PeterDePaul/Downloads/2024-NHL-Rookie-of-the-Year/Player Info/adam_fantilli.png")
+
+calder_stats %>% 
+  select(Name, Odds, `Implied Probability`) %>% 
+  mutate(Image = "", .before = Name) %>% 
+  kbl() %>%  
+  kable_paper(full_width = FALSE, position = "float_left") %>% 
+  column_spec(1, image = image_paths, width = "2.5cm", border_left = T,
+              border_right = T, background = "black") %>% 
+  column_spec(2, width = "2.6cm", border_right = T, background = "lightblue",
+              bold = TRUE) %>% 
+  column_spec(3, width = "2cm", border_right = T, background = "lightblue",
+              bold = TRUE) %>% 
+  column_spec(4, width = "2cm", border_right = T, background = "lightblue",
+              bold = TRUE)
+
+```
+
+Now when discussing these Calder candidates all have been having relatively high performance rookie season. An important thing to note is that my game logs used for my statistics only include offensive statistics and time on ice statistics, but I will still discuss defensive stats like takeaways, blocked shots, and hits particularly for Brock Faber.
+
+I find it important to distinguish that as I see it right now there are only 2 candidates who have a chance at the Calder Trophy, Bedard and Faber. Luke Hughes has been on a huge slide, and Rossi and Fantilli have too much ground to make up at this point in time. Connor Bedard has an implied win probability of 65% considering him being the betting favorite. He has not played since January 5th, and is still the heavy favorite for Rookie of the Year. Bedard's play speaks for itself. It has been an interesting campaign for both Faber and Hughes. Typically the transition for defensemen into the NHL tends to be smoother than for forwards. Brock Faber stands out in particular, since Bedard's injury Faber leads all rookies with 14 points (2nd place has 9 points). Faber has the best chance to overtake Bedard and upset him for the Calder Trophy. Faber has been a work horse on the ice averaging over 25 minutes per game on the ice, and has shown an improvement in his defensive abilities as he is 8th in the NHL in blocked shots over the past month.
+
+The most fascinating part of these betting odds is that prior to Bedard's injury he was running away with the Calder Trophy as he was a $-412$ (80.46% Implied Probability) betting favorite. Another thing to note is that as of December 1st, Brock Faber had $+7667$ (1.29% Implied Probability) betting odds which is a ridiculous turn around in the span of a month. Connor Bedard's injury has been Brock Faber's best friend as it's given him the chance to add the Calder to his trophy case.
+
+### Calder Statistics
+
+Lets take a look at the statistics for the Calder Candidate players this year:
+
+```{r Calder Statistics}
+calder_stats %>% 
+  select(-1, -shorthandedGoals, -shorthandedPoints, -Odds, 
+         -`Implied Probability`) %>% 
+  kbl() %>% 
+  kable_paper(full_width = TRUE) %>% 
+  column_spec(1, background = "lightyellow", bold = TRUE) %>% 
+  column_spec(c(2:13), background = "lightblue", bold = TRUE) %>% 
+  column_spec(c(14:17), background = "lightgreen", bold = TRUE)
+```
+
+I want to focus on per game statistics, it's the only fair way to compare these players given Bedard's absence. Bedard will likely struggle at first when he does return, as most players do when returning from injury so it's very possible his stats regress. His prowess is evident in the comparisons to his fellow Calder candidates.
+
+Focusing on per game stats we can see Bedard is the leader in every category except assists per game which Faber has recently overtaken him. Despite the month absence, Bedard is still leading all rookies in goals, and is tied for second in assists. The problem is Bedard is not projected to return until at earliest the end of February. This gives Faber another 5-10 games to bolster his current season resume, but I believe Bedard will still produce once he returns.
+
+The other important factor is Bedard is the heart of the Chicago Blackhawks organization and they cannot be successful without him. Since the injury the Blackhawks are 3-9-1 (Wins-Losses-OT Losses) and have scored only 18 goals while giving up 35 good for the worst differential in the league in that time frame, and they now officially own the worst record in the league. This is Bedard's most important quality for the Calder.
+
+All in all I believe Connor Bedard will return, and finish off his rookie season strong which will lead him to his Calder Trophy when it's all said and done.
+
+## Bedard and the all-time Greats
+
+Bedard has frequently been compared to Wayne Gretzky, Syndey Crosby, and Connor McDavid all of whom are among the greatest to ever play the game. Out of interest I want to compare Bedard's play with the rookie seasons of Crosby, McDavid, Alexander Ovechkin, Auston Matthews and Patrick Kane. It's important to understand Bedard's effect on the game in reference to the other great players.
+
+```{r fig.width=10}
+gpg_plot_w_names + apg_plot_w_names
+```
+
+From these plots we can see on a goals per game and assists per game level Connor Bedard is way behind all these guys. His exception for goals is Syndey Crosby who has always been an above average scorer but an elite playmaker. It can be seen on an assists level the players whose teams were better tended to average more assists, this can in part be to blame for Bedard's below average assists number comparatively.
+
+```{r fig.width=10}
+ppg_plot_w_names + pm_plot_w_names
+```
+
+There is no doubt that Bedard is having a great rookie season, but the only reason it looks meager comparatively to these other guys is because they had historic seasons and better teams.
+
+```{r}
+rookie_stats %>% 
+  select(Name, seasonId, teamAbbrev, positionCode, team_points, team_wins) %>% 
+  filter(Name %in% c("Connor McDavid", "Connor Bedard", "Sidney Crosby", 
+                     "Alex Ovechkin", "Patrick Kane")) %>% 
+  kbl() %>% 
+  kable_paper(full_width = TRUE) %>% 
+  column_spec(1, background = "lightyellow") %>% 
+  column_spec(c(2:6), background = "lightblue")
+```
+
+Crosby was on a bad team his rookie season, they only won 22 games and had 58 points total. The Blackhawks are projected to finish with 9 points less at the end of this year. Neither team is good but the defining characteristic is Crosby having 3 NHL greats on his rookie team. He played with Mario Lemieux, Mark Recchi, and Sergei Gonchar. Lemieux is the player who has come closest to Gretzky, granted he was 40 when Crosby was a rookie but the mentorship is important. Recchi was one of the best goal scorers of his generation, and Gonchar was a top tier offensive defenseman of the 2000s. Bedard has no one like this to help him.
+
+```{r fig.align='center'}
+toi_plot_w_names
+```
+
+Bedard has one thing over these players and it's his will to play, and his general stubborness to come off the ice. Bedard hates losing, simple as that. It can be seen time and time again during the Blackhawks losses when Bedard will stay on for a 2-3 minute shift in an effort to comeback and win. Not to say any of the other players love hockey but Bedard puts in more time on the ice than any of them.
+
+## Conclusion
+
+Connor Bedard is the best rookie in the NHL right now. Connor Bedard will likely be one of the NHL's top players in a few years given his current play. There are active players who have produced more in their rookie years, but Bedard's team holds him back. The Chicago Blackhawks need to add weapons for Bedard if they want to win, and give him the career he deserves. He has the potential to be a consistent 100 points season player but he's only one man. This year Connor Bedard *should* be the Calder Trophy winner.
