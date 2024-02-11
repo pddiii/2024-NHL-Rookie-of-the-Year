@@ -290,3 +290,51 @@ toi_plot_w_names <-
                                 "Connor McDavid" = "orange",
                                 "Patrick Kane" = "green"),
                      name = "Player")
+
+## Load Calder Candidate leaders as of 02/09/2023 game logs
+## for EDA and Discussion Purposes
+
+calder_odds <-
+  data.frame(playerId = as.factor(c(8482079, 8482122, 8482684, 8484144, 8484166)),
+             odds = c("+1200", "+350", "+750", "-190", "+1400"))
+calder_odds <-
+  calder_odds %>% 
+  mutate(win_probability = round(ifelse(playerId == 8484144, abs(as.numeric(odds)) / (abs(as.numeric(odds)) + 100), 
+                                      100 / (as.numeric(odds) + 100)), 4)) %>% 
+  arrange(desc(win_probability))
+
+calder_games <- read_csv("/Users/PeterDePaul/Downloads/2024-NHL-Rookie-of-the-Year/STATS/Skaters/calder_candidates.csv")
+calder_games <- 
+  calder_games %>% 
+  select(-1, -commonName, -opponentCommonName) %>% # remove the index column
+  # Move the seasonId and playerId variable to the front of data set
+  relocate(c(seasonId, playerId), .before = "gameId") %>%
+  relocate(opponentAbbrev, .after = "teamAbbrev") %>% 
+  # Encode the "Id" variables as factors
+  mutate(seasonId = as.factor(seasonId),
+         playerId = as.factor(playerId),
+         gameId = as.factor(gameId),
+         games = rep(1, nrow(calder_games))) 
+# Stats for the Calder Candidates as of 02/09/2024
+calder_stats <- 
+  calder_games %>% 
+  group_by(playerId) %>% 
+  summarise_if(is.numeric, sum) %>% 
+  inner_join(skaters_info %>% select(playerId, Name), by = "playerId") %>% 
+  inner_join(calder_odds, by = "playerId") %>% 
+  relocate(Name, .after = playerId) %>% 
+  arrange(desc(win_probability)) %>% 
+  mutate(gpg = round(goals / games, 4),
+         apg = round(assists / games, 4),
+         ppg = round(points / games, 4),
+         spg = round(shots / games, 4)) %>% 
+  rename(Odds = odds,
+         `Implied Probability` = win_probability) %>% 
+  mutate(`Implied Probability` = `Implied Probability` * 100,
+         `Implied Probability` = str_c(as.character(`Implied Probability`), "%"))
+
+
+# Remove variables not needed for the article
+rm(apg_plot, bedard_stats, calder_games, calder_odds, def_game_log, for_game_log,
+   def_info, for_info, gpg_plot, pm_plot, ppg_plot, rookie_seasons, rookie_subset,
+   skaters_game_log, skaters_info, standings, toi_plot)
