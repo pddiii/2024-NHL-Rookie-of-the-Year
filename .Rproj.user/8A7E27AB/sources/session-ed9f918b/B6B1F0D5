@@ -1,0 +1,32 @@
+{
+    "id": "B6B1F0D5",
+    "path": "~/Downloads/2024-NHL-Rookie-of-the-Year/Article_pdf.Rmd",
+    "project_path": "Article_pdf.Rmd",
+    "type": "r_markdown",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1708035412132.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "7,28",
+        "scrollLine": "0",
+        "last_setup_crc32": "ed9f918b20f42c50",
+        "rmdVisualMode": "false",
+        "rmdVisualWrapConfigured": "true",
+        "docOutlineVisible": "1",
+        "rmdVisualModeLocation": "4940:2540",
+        "rmdVisualCollapsedChunks": ""
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1708375965,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1708375965552,
+    "read_only": false,
+    "read_only_alternatives": []
+}
